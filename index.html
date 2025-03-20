@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surface Area Integrals - Interactive Guide</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #f5f6fa;
+            --text-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin: 2rem 0 1rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .formula {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .example {
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+
+        .interactive-demo {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .canvas-container {
+            width: 100%;
+            height: 400px;
+            background: #fff;
+            border: 1px solid #ddd;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.5rem 0;
+        }
+
+        .slider-container label {
+            min-width: 120px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        button {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .note {
+            background: #fff3cd;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .visualization-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .surface-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .surface-type-selector {
+            margin: 1rem 0;
+        }
+
+        select {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 0.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .info-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Surface Area Integrals</h1>
+        <p>An Interactive Guide to Understanding Surface Area Calculations</p>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <h2>Introduction to Surface Area Integrals</h2>
+            <p>Surface area integrals are a fundamental concept in multivariable calculus that allows us to calculate the area of curved surfaces in three-dimensional space. This guide will help you understand the concept through interactive examples and visualizations.</p>
+            
+            <div class="formula">
+                The general formula for surface area integral is:
+                <br>
+                A = ∫∫√(1 + (∂z/∂x)² + (∂z/∂y)²) dA
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Interactive Surface Explorer</h2>
+            <div class="surface-type-selector">
+                <label for="surfaceType">Select Surface Type:</label>
+                <select id="surfaceType" onchange="changeSurfaceType()">
+                    <option value="paraboloid">Paraboloid (z = ax² + by²)</option>
+                    <option value="sine">Sine Wave (z = a sin(bx) sin(by))</option>
+                    <option value="cone">Cone (z = a√(x² + y²))</option>
+                    <option value="sphere">Sphere (x² + y² + z² = r²)</option>
+                </select>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="surfaceCanvas"></canvas>
+                <div class="surface-info" id="surfaceInfo">
+                    Surface Area: <span id="surfaceArea">Calculating...</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="slider-container">
+                    <label for="paramA">Parameter a:</label>
+                    <input type="range" id="paramA" min="0.1" max="2" step="0.1" value="1" oninput="updateSurface()">
+                    <span id="paramAValue">1.0</span>
+                </div>
+                <div class="slider-container">
+                    <label for="paramB">Parameter b:</label>
+                    <input type="range" id="paramB" min="0.1" max="2" step="0.1" value="1" oninput="updateSurface()">
+                    <span id="paramBValue">1.0</span>
+                </div>
+                <button onclick="rotateSurface()">Rotate Surface</button>
+                <button onclick="toggleWireframe()">Toggle Wireframe</button>
+                <button onclick="resetView()">Reset View</button>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Surface Area Components</h2>
+            <div class="grid">
+                <div class="info-card">
+                    <h3>Surface Element</h3>
+                    <p>The small piece of surface area we're calculating:</p>
+                    <div class="formula">dS = √(1 + (∂z/∂x)² + (∂z/∂y)²) dx dy</div>
+                </div>
+                <div class="info-card">
+                    <h3>Normal Vector</h3>
+                    <p>Perpendicular to the surface at each point:</p>
+                    <div class="formula">n = (-∂z/∂x, -∂z/∂y, 1)</div>
+                </div>
+                <div class="info-card">
+                    <h3>Current Surface</h3>
+                    <p>Equation: <span id="currentEquation">z = x² + y²</span></p>
+                    <p>Partial Derivatives:</p>
+                    <ul id="partialDerivatives">
+                        <li>∂z/∂x = 2x</li>
+                        <li>∂z/∂y = 2y</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Step-by-Step Calculation</h2>
+            <div class="example">
+                <h3>Example: Calculating Surface Area</h3>
+                <p>For the current surface:</p>
+                <ol>
+                    <li>Find partial derivatives (shown above)</li>
+                    <li>Calculate the integrand: √(1 + (∂z/∂x)² + (∂z/∂y)²)</li>
+                    <li>Set up the double integral over the region of interest</li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Common Applications</h2>
+            <ul>
+                <li>Calculating the surface area of 3D objects</li>
+                <li>Determining material requirements for curved surfaces</li>
+                <li>Analyzing fluid flow over surfaces</li>
+                <li>Heat transfer calculations</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Important Notes</h2>
+            <div class="note">
+                <p>Key points to remember:</p>
+                <ul>
+                    <li>The surface must be smooth and differentiable</li>
+                    <li>Choose appropriate coordinate systems for simpler calculations</li>
+                    <li>Consider symmetry to simplify integrals</li>
+                    <li>Watch out for singular points where derivatives are undefined</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Three.js setup for surface visualization
+        let scene, camera, renderer, surface;
+        let isWireframe = false;
+        let currentSurfaceType = 'paraboloid';
+        let controls;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('surfaceCanvas'), antialias: true });
+            renderer.setSize(document.getElementById('surfaceCanvas').clientWidth, 
+                           document.getElementById('surfaceCanvas').clientHeight);
+
+            // Add orbit controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Create initial surface
+            createSurface();
+
+            // Add lights
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(1, 1, 1);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
+
+            camera.position.z = 5;
+
+            animate();
+        }
+
+        function createSurface() {
+            if (surface) {
+                scene.remove(surface);
+            }
+
+            const geometry = new THREE.ParametricGeometry((u, v, target) => {
+                const x = u * 2 - 1;
+                const y = v * 2 - 1;
+                let z;
+
+                const a = parseFloat(document.getElementById('paramA').value);
+                const b = parseFloat(document.getElementById('paramB').value);
+
+                switch(currentSurfaceType) {
+                    case 'paraboloid':
+                        z = a * x * x + b * y * y;
+                        break;
+                    case 'sine':
+                        z = a * Math.sin(b * x) * Math.sin(b * y);
+                        break;
+                    case 'cone':
+                        z = a * Math.sqrt(x * x + y * y);
+                        break;
+                    case 'sphere':
+                        const r = a;
+                        const phi = Math.acos(z / r);
+                        const theta = Math.atan2(y, x);
+                        x = r * Math.sin(phi) * Math.cos(theta);
+                        y = r * Math.sin(phi) * Math.sin(theta);
+                        z = r * Math.cos(phi);
+                        break;
+                }
+
+                target.set(x, y, z);
+            }, 50, 50);
+
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x3498db,
+                wireframe: isWireframe
+            });
+
+            surface = new THREE.Mesh(geometry, material);
+            scene.add(surface);
+
+            updateSurfaceInfo();
+        }
+
+        function updateSurface() {
+            document.getElementById('paramAValue').textContent = document.getElementById('paramA').value;
+            document.getElementById('paramBValue').textContent = document.getElementById('paramB').value;
+            createSurface();
+        }
+
+        function changeSurfaceType() {
+            currentSurfaceType = document.getElementById('surfaceType').value;
+            updateSurfaceInfo();
+            createSurface();
+        }
+
+        function updateSurfaceInfo() {
+            const a = document.getElementById('paramA').value;
+            const b = document.getElementById('paramB').value;
+            let equation = '';
+            let derivatives = '';
+
+            switch(currentSurfaceType) {
+                case 'paraboloid':
+                    equation = `z = ${a}x² + ${b}y²`;
+                    derivatives = `∂z/∂x = ${2*a}x\n∂z/∂y = ${2*b}y`;
+                    break;
+                case 'sine':
+                    equation = `z = ${a}sin(${b}x)sin(${b}y)`;
+                    derivatives = `∂z/∂x = ${a*b}cos(${b}x)sin(${b}y)\n∂z/∂y = ${a*b}sin(${b}x)cos(${b}y)`;
+                    break;
+                case 'cone':
+                    equation = `z = ${a}√(x² + y²)`;
+                    derivatives = `∂z/∂x = ${a}x/√(x² + y²)\n∂z/∂y = ${a}y/√(x² + y²)`;
+                    break;
+                case 'sphere':
+                    equation = `x² + y² + z² = ${a}²`;
+                    derivatives = `∂z/∂x = -x/z\n∂z/∂y = -y/z`;
+                    break;
+            }
+
+            document.getElementById('currentEquation').textContent = equation;
+            document.getElementById('partialDerivatives').innerHTML = derivatives.split('\n').map(d => `<li>${d}</li>`).join('');
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        function rotateSurface() {
+            surface.rotation.x += 0.1;
+            surface.rotation.y += 0.1;
+        }
+
+        function toggleWireframe() {
+            isWireframe = !isWireframe;
+            surface.material.wireframe = isWireframe;
+        }
+
+        function resetView() {
+            camera.position.set(0, 0, 5);
+            camera.lookAt(0, 0, 0);
+            controls.reset();
+        }
+
+        // Initialize the scene when the page loads
+        window.addEventListener('load', init);
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</body>
+</html> 
